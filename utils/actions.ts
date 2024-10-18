@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use server';
 
-import { profileSchema, validateWithZodSchema } from './schemas';
+import { imageSchema, profileSchema, propertySchema, validateWithZodSchema } from './schemas';
 import db from './db';
 import { auth, clerkClient, currentUser } from '@clerk/nextjs/server';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { uploadImage } from '@/utils/supabase';
 
 const getAuthUser = async () => {
   const user = await currentUser();
@@ -21,7 +23,6 @@ const renderError = (error: unknown): { message: string } => {
   return { message: error instanceof Error ? error.message : 'An error occurred' };
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const createProfileAction = async (prevState: any, formData: FormData) => {
   try {
     const user = await currentUser();
@@ -69,7 +70,6 @@ export const fetchProfile = async () => {
   return profile;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const updateProfileAction = async (prevState: any, formData: FormData): Promise<{ message: string }> => {
   const user = await getAuthUser();
   try {
@@ -83,4 +83,32 @@ export const updateProfileAction = async (prevState: any, formData: FormData): P
   } catch (error) {
     return renderError(error);
   }
+};
+
+export const updateProfileImageAction = async (prevState: any, formData: FormData): Promise<{ message: string }> => {
+  const user = await getAuthUser();
+  try {
+    const image = formData.get('image') as File;
+    const validatedFields = validateWithZodSchema(imageSchema, { image });
+    const fullPath = await uploadImage(validatedFields.image);
+
+    await db.profile.update({ where: { clerkId: user.id }, data: { profileImage: fullPath } });
+    revalidatePath('/profile');
+
+    return { message: 'Profile image updated successfully' };
+  } catch (error) {
+    return renderError(error);
+  }
+};
+
+export const createPropertyAction = async (prevState: any, formData: FormData): Promise<{ message: string }> => {
+  const rawData = Object.fromEntries(formData.entries());
+  try {
+    const validatedFields = validateWithZodSchema(propertySchema, rawData);
+
+    return { message: 'Property created successfully' };
+  } catch (error) {
+    return renderError(error);
+  }
+  // redirect('/');
 };
