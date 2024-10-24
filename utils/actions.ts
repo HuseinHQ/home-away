@@ -102,13 +102,72 @@ export const updateProfileImageAction = async (prevState: any, formData: FormDat
 };
 
 export const createPropertyAction = async (prevState: any, formData: FormData): Promise<{ message: string }> => {
-  const rawData = Object.fromEntries(formData.entries());
+  const user = await getAuthUser();
   try {
-    const validatedFields = validateWithZodSchema(propertySchema, rawData);
+    const rawData = Object.fromEntries(formData.entries());
+    const file = formData.get('image') as File;
 
-    return { message: 'Property created successfully' };
+    const validatedFields = validateWithZodSchema(propertySchema, rawData);
+    const validatedFile = validateWithZodSchema(imageSchema, { image: file });
+    const fullPath = await uploadImage(validatedFile.image);
+
+    await db.property.create({
+      data: {
+        ...validatedFields,
+        image: fullPath,
+        profileId: user.id,
+      },
+    });
   } catch (error) {
     return renderError(error);
   }
-  // redirect('/');
+  redirect('/');
+};
+
+export const fetchProperties = async ({ search = '', category = '' }: { search?: string; category?: string }) => {
+  const properties = await db.property.findMany({
+    where: {
+      category: { contains: category, mode: 'insensitive' },
+      OR: [{ name: { contains: search, mode: 'insensitive' } }, { tagline: { contains: search, mode: 'insensitive' } }],
+    },
+    select: {
+      id: true,
+      name: true,
+      tagline: true,
+      country: true,
+      price: true,
+      image: true,
+    },
+    orderBy: { createdAt: 'desc' },
+  });
+  return properties;
+};
+
+export const fetchFavoriteId = async ({ propertyId }: { propertyId: string }) => {
+  const user = await getAuthUser();
+  const favorite = await db.favorite.findFirst({
+    where: { propertyId: propertyId, profileId: user.id },
+    select: { id: true },
+  });
+  return favorite?.id || null;
+};
+
+export const toggleFavoriteAction = async (prevState: {
+  propertyId: string;
+  favoriteId: string | null;
+  pathname: string;
+}) => {
+  const user = await getAuthUser();
+  const { propertyId, favoriteId, pathname } = prevState;
+  try {
+    if (favoriteId) {
+      await db.favorite.delete({ where: { id: favoriteId } });
+    } else {
+      await db.favorite.create({ data: { profileId: user.id, propertyId } });
+    }
+    revalidatePath(pathname);
+    return { message: favoriteId ? 'Removed from favorites' : 'Added to favorites' };
+  } catch (error) {
+    return renderError(error);
+  }
 };
