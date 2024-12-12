@@ -3,7 +3,7 @@
 
 import { imageSchema, profileSchema, propertySchema, validateWithZodSchema } from './schemas';
 import db from './db';
-import { auth, clerkClient, currentUser } from '@clerk/nextjs/server';
+import { clerkClient, currentUser } from '@clerk/nextjs/server';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { uploadImage } from '@/utils/supabase';
@@ -169,5 +169,43 @@ export const toggleFavoriteAction = async (prevState: {
     return { message: favoriteId ? 'Removed from favorites' : 'Added to favorites' };
   } catch (error) {
     return renderError(error);
+  }
+};
+
+export const fetchFavorites = async () => {
+  const user = await getAuthUser();
+
+  try {
+    const favorites = await db.favorite.findMany({
+      where: { profileId: user.id },
+      select: {
+        property: {
+          select: {
+            id: true,
+            name: true,
+            tagline: true,
+            country: true,
+            price: true,
+            image: true,
+          },
+        },
+      },
+    });
+
+    return favorites.map((favorite) => favorite.property);
+  } catch {
+    return [];
+  }
+};
+
+export const fetchPropertyDetail = async (id: string) => {
+  try {
+    const property = await db.property.findUnique({
+      where: { id },
+      include: { profile: true },
+    });
+    return property;
+  } catch (error) {
+    renderError(error);
   }
 };

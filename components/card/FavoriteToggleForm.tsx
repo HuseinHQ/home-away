@@ -1,8 +1,6 @@
 'use client';
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
-import { FaHeart } from 'react-icons/fa';
 import { usePathname } from 'next/navigation';
 import FormContainer from '@/components/form/FormContainer';
 import { toggleFavoriteAction } from '@/utils/actions';
