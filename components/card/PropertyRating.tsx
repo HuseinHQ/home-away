@@ -5,7 +5,7 @@ import { FaStar } from 'react-icons/fa';
 const rating = 4.7;
 const count = 100;
 
-function PropertyRating({ propertyId, inPage }: { propertyId: string; inPage: boolean }) {
+function PropertyRating({ inPage }: { inPage: boolean }) {
   const className = `flex gap-1 items-center ${inPage ? 'text-md' : 'text-sm'}`;
   const countText = count > 1 ? 'reviews' : 'review';
   const countValue = `(${count}) ${inPage ? countText : ''}`;

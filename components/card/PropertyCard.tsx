@@ -26,7 +26,7 @@ function PropertyCard({ property }: { property: PropertyCardProps }) {
         <div className="flex justify-between items-center">
           <h3 className="text-sm font-semibold mt-1">{name.substring(0, 30)}</h3>
           {/* property rating */}
-          <PropertyRating propertyId={propertyId} inPage={false} />
+          <PropertyRating inPage={false} />
         </div>
         <p className="text-sm mt-1 text-muted-foreground">{tagline.substring(0, 40)}</p>
         <div className="flex justify-between items-center mt-1">
