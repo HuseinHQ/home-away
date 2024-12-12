@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use server';
 
-import { imageSchema, profileSchema, propertySchema, validateWithZodSchema } from './schemas';
+import { createReviewSchema, imageSchema, profileSchema, propertySchema, validateWithZodSchema } from './schemas';
 import db from './db';
 import { clerkClient, currentUser } from '@clerk/nextjs/server';
 import { revalidatePath } from 'next/cache';
@@ -208,4 +208,40 @@ export const fetchPropertyDetail = async (id: string) => {
   } catch (error) {
     renderError(error);
   }
+};
+
+export const createReviewAction = async (prevState: any, formData: FormData): Promise<{ message: string }> => {
+  const user = await getAuthUser();
+  try {
+    const rawData = Object.fromEntries(formData.entries());
+    const validatedFields = validateWithZodSchema(createReviewSchema, rawData);
+
+    await db.review.create({
+      data: {
+        ...validatedFields,
+        profileId: user.id,
+      },
+    });
+    revalidatePath(`/properties/${validatedFields.propertyId}`);
+    return { message: 'create review' };
+  } catch (error) {
+    return renderError(error);
+  }
+};
+
+export const fetchPropertyReviews = async (propertyId: string) => {
+  try {
+    const reviews = await db.review.findMany({ where: { propertyId }, include: { profile: true } });
+    return reviews;
+  } catch (error) {
+    renderError(error);
+  }
+};
+
+export const fetchPropertyReviewsByUser = async () => {
+  return { message: 'fetch user reviews' };
+};
+
+export const deleteReviewAction = async () => {
+  return { message: 'delete  reviews' };
 };
