@@ -1,13 +1,14 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { ReloadIcon } from '@radix-ui/react-icons';
-import { useFormStatus } from 'react-dom';
-import { Button } from '@/components/ui/button';
-import { SignInButton } from '@clerk/nextjs';
-import { FaRegHeart, FaHeart } from 'react-icons/fa';
+import React from "react";
+import { ReloadIcon } from "@radix-ui/react-icons";
+import { useFormStatus } from "react-dom";
+import { Button } from "@/components/ui/button";
+import { SignInButton } from "@clerk/nextjs";
+import { FaRegHeart, FaHeart } from "react-icons/fa";
+import { LuTrash2, LuPenSquare } from "react-icons/lu";
 
-type btnSize = 'lg' | 'default' | 'sm' | 'icon' | null | undefined;
+type btnSize = "lg" | "default" | "sm" | "icon" | null | undefined;
 
 type SubmitButtonProps = {
   className?: string;
@@ -15,7 +16,7 @@ type SubmitButtonProps = {
   size?: btnSize;
 };
 
-export function SubmitButton({ className = '', text = 'submit', size = 'lg' }: SubmitButtonProps) {
+export function SubmitButton({ className = "", text = "submit", size = "lg" }: SubmitButtonProps) {
   const { pending } = useFormStatus();
 
   return (
@@ -46,7 +47,37 @@ export const CardSubmitButton = ({ isFavorite }: { isFavorite: boolean }) => {
   const { pending } = useFormStatus();
   return (
     <Button type="submit" size="icon" variant="outline" className="p-2 cursor-pointer">
-      {pending ? <ReloadIcon className="animate-spin" /> : isFavorite ? <FaHeart /> : <FaRegHeart />}
+      {pending ? (
+        <ReloadIcon className="animate-spin" />
+      ) : isFavorite ? (
+        <FaHeart />
+      ) : (
+        <FaRegHeart />
+      )}
+    </Button>
+  );
+};
+
+type actionType = "delete" | "edit";
+
+export const IconButton = ({ actionType }: { actionType: actionType }) => {
+  const { pending } = useFormStatus();
+
+  const renderIcon = () => {
+    switch (actionType) {
+      case "delete":
+        return <LuTrash2 />;
+      case "edit":
+        return <LuPenSquare />;
+      default:
+        const never: never = actionType;
+        throw new Error(`Invalid action type: ${never}`);
+    }
+  };
+
+  return (
+    <Button type="submit" size="icon" variant="link" className="p-2 cursor-pointer">
+      {pending ? <ReloadIcon className="animate-spin" /> : renderIcon()}
     </Button>
   );
 };

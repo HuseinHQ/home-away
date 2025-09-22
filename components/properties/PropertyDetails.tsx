@@ -1,4 +1,4 @@
-import { formatQuantity } from '@/utils/format';
+import { formatQuantity } from "@/utils/format";
 
 type PropertyDetailsProps = {
   details: {
@@ -12,10 +12,10 @@ type PropertyDetailsProps = {
 function PropertyDetails({ details: { bedrooms, baths, beds, guests } }: PropertyDetailsProps) {
   return (
     <p className="font-light">
-      <span>{formatQuantity(bedrooms, 'bedroom')} &middot;</span>
-      <span>{formatQuantity(baths, 'bath')} &middot;</span>
-      <span>{formatQuantity(guests, 'guest')} &middot;</span>
-      <span>{formatQuantity(beds, 'bed')}</span>
+      <span>{formatQuantity(bedrooms, "bedroom")} &middot;</span>
+      <span>{formatQuantity(baths, "bath")} &middot;</span>
+      <span>{formatQuantity(guests, "guest")} &middot;</span>
+      <span>{formatQuantity(beds, "bed")}</span>
     </p>
   );
 }

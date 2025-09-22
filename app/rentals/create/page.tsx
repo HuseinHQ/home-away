@@ -1,15 +1,15 @@
-import React from 'react';
-import FormInput from '@/components/form/FormInput';
-import FormContainer from '@/components/form/FormContainer';
-import { createPropertyAction } from '@/utils/actions';
-import { SubmitButton } from '@/components/form/Buttons';
-import PriceInput from '@/components/form/PriceInput';
-import CategoriesInput from '@/components/form/CategoriesInput';
-import TextAreaInput from '@/components/form/TextAreaInput';
-import CountriesInput from '@/components/form/CountriesInput';
-import ImageInput from '@/components/form/ImageInput';
-import CounterInput from '@/components/form/CounterInput';
-import AmenitiesInput from '@/components/form/AmenitiesInput';
+import React from "react";
+import FormInput from "@/components/form/FormInput";
+import FormContainer from "@/components/form/FormContainer";
+import { createPropertyAction } from "@/utils/actions";
+import { SubmitButton } from "@/components/form/Buttons";
+import PriceInput from "@/components/form/PriceInput";
+import CategoriesInput from "@/components/form/CategoriesInput";
+import TextAreaInput from "@/components/form/TextAreaInput";
+import CountriesInput from "@/components/form/CountriesInput";
+import ImageInput from "@/components/form/ImageInput";
+import CounterInput from "@/components/form/CounterInput";
+import AmenitiesInput from "@/components/form/AmenitiesInput";
 
 function CreatePropertyPage() {
   return (
@@ -20,7 +20,11 @@ function CreatePropertyPage() {
         <FormContainer action={createPropertyAction}>
           <div className="grid md:grid-cols-2 gap-8 mb-4">
             <FormInput name="name" label="Name (20 limit)" defaultValue="Cabin in Latvia" />
-            <FormInput name="tagline" label="Tagline (30 limit)" defaultValue="Dream Getaway Awaits You Here" />
+            <FormInput
+              name="tagline"
+              label="Tagline (30 limit)"
+              defaultValue="Dream Getaway Awaits You Here"
+            />
             {/* price */}
             <PriceInput />
             {/* categories */}

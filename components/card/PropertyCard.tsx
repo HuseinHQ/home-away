@@ -1,12 +1,12 @@
-import React from 'react';
+import React from "react";
 
-import Image from 'next/image';
-import Link from 'next/link';
-import CountryFlagAndName from './CountryFlagAndName';
-import PropertyRating from './PropertyRating';
-import FavoriteToggleButton from './FavoriteToggleButton';
-import { PropertyCardProps } from '@/utils/types';
-import { formatCurrency } from '@/utils/format';
+import Image from "next/image";
+import Link from "next/link";
+import CountryFlagAndName from "./CountryFlagAndName";
+import PropertyRating from "./PropertyRating";
+import FavoriteToggleButton from "./FavoriteToggleButton";
+import { PropertyCardProps } from "@/utils/types";
+import { formatCurrency } from "@/utils/format";
 
 function PropertyCard({ property }: { property: PropertyCardProps }) {
   const { id: propertyId, name, image, country, price, tagline } = property;
@@ -26,7 +26,7 @@ function PropertyCard({ property }: { property: PropertyCardProps }) {
         <div className="flex justify-between items-center">
           <h3 className="text-sm font-semibold mt-1">{name.substring(0, 30)}</h3>
           {/* property rating */}
-          <PropertyRating inPage={false} />
+          <PropertyRating propertyId={propertyId} inPage={false} />
         </div>
         <p className="text-sm mt-1 text-muted-foreground">{tagline.substring(0, 40)}</p>
         <div className="flex justify-between items-center mt-1">
