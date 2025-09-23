@@ -2,7 +2,20 @@
 
 const nextConfig = {
   images: {
-    domains: ["img.clerk.com", "gzuhescriqzrazgvorsc.supabase.co", process.env.SUPABASE_DOMAIN],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "img.clerk.com",
+      },
+      {
+        protocol: "https",
+        hostname: "gzuhescriqzrazgvorsc.supabase.co",
+      },
+      {
+        protocol: "https",
+        hostname: process.env.SUPABASE_DOMAIN,
+      },
+    ],
   },
 };
 
