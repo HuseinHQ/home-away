@@ -1,6 +1,7 @@
 # 🏡 Home Away
 
 A modern vacation rental platform built with Next.js, allowing users to list and book properties worldwide.
+Public link: https://home-away.huseinhk.com
 
 ## ✨ Features
 
