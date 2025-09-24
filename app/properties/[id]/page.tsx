@@ -3,6 +3,7 @@ import PropertyRating from "@/components/card/PropertyRating";
 import Amenities from "@/components/properties/Amenities";
 import BreadCrumbs from "@/components/properties/BreadCrumbs";
 import Description from "@/components/properties/Description";
+import EditButton from "@/components/properties/EditButton";
 import ImageContainer from "@/components/properties/ImageContainer";
 import PropertyDetails from "@/components/properties/PropertyDetails";
 import ShareButton from "@/components/properties/ShareButton";
@@ -16,15 +17,21 @@ import { auth } from "@clerk/nextjs/server";
 import dynamic from "next/dynamic";
 import { redirect } from "next/navigation";
 
-const DynamicMap = dynamic(() => import("@/components/properties/PropertyMap"), {
-  ssr: false,
-  loading: () => <Skeleton className="h-[400px] w-full" />,
-});
+const DynamicMap = dynamic(
+  () => import("@/components/properties/PropertyMap"),
+  {
+    ssr: false,
+    loading: () => <Skeleton className="h-[400px] w-full" />,
+  }
+);
 
-const DynamicBookingWrapper = dynamic(() => import("@/components/booking/BookingWrapper"), {
-  ssr: false,
-  loading: () => <Skeleton className="h-[200px] w-full" />,
-});
+const DynamicBookingWrapper = dynamic(
+  () => import("@/components/booking/BookingWrapper"),
+  {
+    ssr: false,
+    loading: () => <Skeleton className="h-[200px] w-full" />,
+  }
+);
 
 async function PropertyDetailPage({ params }: { params: { id: string } }) {
   const property = await fetchPropertyDetail(params.id);
@@ -45,6 +52,10 @@ async function PropertyDetailPage({ params }: { params: { id: string } }) {
       <header className="flex justify-between items-center mt-4">
         <h1 className="text-4xl font-bold">{property.tagline}</h1>
         <div className="flex items-center gap-4">
+          <EditButton
+            propertyId={property.id}
+            ownerId={property.profile.clerkId}
+          />
           <ShareButton propertiId={property.id} name={property.name} />
           <FavoriteToggleButton propertyId={property.id} />
         </div>

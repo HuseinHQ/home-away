@@ -24,7 +24,11 @@ export default function ConfirmBooking() {
     );
   }
 
-  const createBooking = createBookingAction.bind(null, { propertyId, checkIn, checkOut });
+  const createBooking = createBookingAction.bind(null, {
+    propertyId,
+    checkIn,
+    checkOut,
+  });
   return (
     <section>
       <FormContainer action={createBooking}>
